@@ -1,0 +1,210 @@
+C51 COMPILER V9.57.0.0   MAIN                                                              02/05/2020 16:22:54 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\C51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "main.h"
+   2          #include "GPS.h"
+   3          #include <reg52.h>
+   4          #define uchar unsigned char  
+   5          #define uchar unsigned char
+   6            
+   7          typedef unsigned int u16;   //¶ÔÊý¾ÝÀàÐÍ½øÐÐÉùÃ÷¶¨Òå
+   8          typedef unsigned char u8;
+   9          
+  10          unsigned char i,j,k,l;
+  11          
+  12          sbit P0_0 = P0^0;
+  13          sbit P0_1 = P0^1;
+  14          sbit P0_2 = P0^2;
+  15          sbit P0_3 = P0^3;
+  16          sbit P0_4 = P0^4;
+  17          sbit P0_5 = P0^5;
+  18          sbit P0_6 = P0^6;
+  19          sbit P0_7 = P0^7;
+  20          sbit P1_0 = P1^0;
+  21          sbit P1_1 = P1^1;
+  22          sbit P1_2 = P1^2;
+  23          sbit P1_3 = P1^3;
+  24          sbit P1_4 = P1^4;
+  25          sbit P1_5 = P1^5;
+  26          sbit P1_6 = P1^6;
+  27          sbit P1_7 = P1^7;
+  28          sbit P2_0 = P2^0;
+  29          sbit P2_1 = P2^1;
+  30          sbit P2_2 = P2^2;
+  31          sbit P2_3 = P2^3;
+  32          sbit P2_4 = P2^4;
+  33          sbit P2_5 = P2^5;
+  34          sbit P2_6 = P2^6;
+  35          sbit P2_7 = P2^7;
+  36          sbit P3_0 = P3^0;
+  37          sbit P3_1 = P3^1;
+  38          sbit P3_2 = P3^2;
+  39          sbit P3_3 = P3^3;
+  40          sbit P3_4 = P3^4;
+  41          sbit P3_5 = P3^5;
+  42          sbit P3_6 = P3^6;
+  43          sbit P3_7 = P3^7;
+  44          
+  45          unsigned char m;
+  46          
+  47          unsigned char xdata Display_GPGGA_Buffer[68];
+  48          bit Flag_Calc_GPGGA_OK = 0;
+  49          
+  50          void display0()
+  51          {
+  52   1        u8 j;
+  53   1        j = Hour%10;
+  54   1        switch(j)
+  55   1        {
+C51 COMPILER V9.57.0.0   MAIN                                                              02/05/2020 16:22:54 PAGE 2   
+
+  56   2          case(0):
+  57   2            P0_0 = 0; P0_1 = 0; P0_2 = 0; P0_3 = 0; P0_4 = 0; P0_5 = 0; P0_6 = 1; P0_7 = 1; break;
+  58   2          case(1):
+  59   2            P0_0 = 1; P0_1 = 0; P0_2 = 0; P0_3 = 1; P0_4 = 1; P0_5 = 1; P0_6 = 1; P0_7 = 1; break;
+  60   2          case(2):
+  61   2            P0_0 = 0; P0_1 = 0; P0_2 = 1; P0_3 = 0; P0_4 = 0; P0_5 = 1; P0_6 = 0; P0_7 = 1; break;
+  62   2          case(3):
+  63   2            P0_0 = 0; P0_1 = 0; P0_2 = 0; P0_3 = 0; P0_4 = 1; P0_5 = 1; P0_6 = 0; P0_7 = 1; break;
+  64   2          case(4):
+  65   2            P0_0 = 1; P0_1 = 0; P0_2 = 0; P0_3 = 1; P0_4 = 1; P0_5 = 0; P0_6 = 0; P0_7 = 1; break;
+  66   2            break;
+  67   2        }
+  68   1      }
+  69          
+  70          void display1()
+  71          {
+  72   1        u8 l;
+  73   1        l = Min_Low;
+  74   1        switch(l)
+  75   1        {
+  76   2          case(0):
+  77   2            P1_0 = 0; P1_1 = 0; P1_2 = 0; P1_3 = 0; P1_4 = 0; P1_5 = 0; P1_6 = 1; P1_7 = 0; break;
+  78   2          case(1):
+  79   2            P1_0 = 1; P1_1 = 0; P1_2 = 0; P1_3 = 1; P1_4 = 1; P1_5 = 1; P1_6 = 1; P1_7 = 0; break;
+  80   2          case(2):
+  81   2            P1_0 = 0; P1_1 = 0; P1_2 = 1; P1_3 = 0; P1_4 = 0; P1_5 = 1; P1_6 = 0; P1_7 = 0; break;
+  82   2          case(3):
+  83   2            P1_0 = 0; P1_1 = 0; P1_2 = 0; P1_3 = 0; P1_4 = 1; P1_5 = 1; P1_6 = 0; P1_7 = 0; break;
+  84   2          case(4):
+  85   2            P1_0 = 1; P1_1 = 0; P1_2 = 0; P1_3 = 1; P1_4 = 1; P1_5 = 0; P1_6 = 0; P1_7 = 0; break;
+  86   2          case(5):
+  87   2            P1_0 = 0; P1_1 = 1; P1_2 = 0; P1_3 = 0; P1_4 = 1; P1_5 = 0; P1_6 = 0; P1_7 = 0; break;
+  88   2          case(6):
+  89   2            P1_0 = 0; P1_1 = 1; P1_2 = 0; P1_3 = 0; P1_4 = 0; P1_5 = 0; P1_6 = 0; P1_7 = 0; break;
+  90   2          case(7):
+  91   2            P1_0 = 0; P1_1 = 0; P1_2 = 0; P1_3 = 1; P1_4 = 1; P1_5 = 1; P1_6 = 1; P1_7 = 0; break;
+  92   2          case(8):
+  93   2            P1_0 = 0; P1_1 = 0; P1_2 = 0; P1_3 = 0; P1_4 = 0; P1_5 = 0; P1_6 = 0; P1_7 = 0; break;
+  94   2          case(9):
+  95   2            P1_0 = 0; P1_1 = 0; P1_2 = 0; P1_3 = 0; P1_4 = 1; P1_5 = 0; P1_6 = 0; P1_7 = 0; break;
+  96   2          default:
+  97   2            break;
+  98   2        }
+  99   1      }
+ 100          
+ 101          void display2()
+ 102          {
+ 103   1        u8 k;
+ 104   1        k = Min_High;
+ 105   1        switch(k)
+ 106   1        {
+ 107   2          case(0):
+ 108   2            P2_0 = 0; P2_1 = 0; P2_2 = 0; P2_3 = 0; P2_4 = 0; P2_5 = 0; P2_6 = 1; P2_7 = 1; break;
+ 109   2          case(1):
+ 110   2            P2_0 = 1; P2_1 = 0; P2_2 = 0; P2_3 = 1; P2_4 = 1; P2_5 = 1; P2_6 = 1; P2_7 = 1; break;
+ 111   2          case(2):
+ 112   2            P2_0 = 0; P2_1 = 0; P2_2 = 1; P2_3 = 0; P2_4 = 0; P2_5 = 1; P2_6 = 0; P2_7 = 1; break;
+ 113   2          case(3):
+ 114   2            P2_0 = 0; P2_1 = 0; P2_2 = 0; P2_3 = 0; P2_4 = 1; P2_5 = 1; P2_6 = 0; P2_7 = 1; break;
+ 115   2          case(4):
+ 116   2            P2_0 = 1; P2_1 = 0; P2_2 = 0; P2_3 = 1; P2_4 = 1; P2_5 = 0; P2_6 = 0; P2_7 = 1; break;
+ 117   2          case(5):
+C51 COMPILER V9.57.0.0   MAIN                                                              02/05/2020 16:22:54 PAGE 3   
+
+ 118   2            P2_0 = 0; P2_1 = 1; P2_2 = 0; P2_3 = 0; P2_4 = 1; P2_5 = 0; P2_6 = 0; P2_7 = 1; break;
+ 119   2          case(6):
+ 120   2            P2_0 = 0; P2_1 = 1; P2_2 = 0; P2_3 = 0; P2_4 = 0; P2_5 = 0; P2_6 = 0; P2_7 = 1; break;
+ 121   2          default:
+ 122   2            break;
+ 123   2        }
+ 124   1      }
+ 125          
+ 126          void display3()//P3.0<->P3.7    P3.1<->P1.7
+ 127          {
+ 128   1        u8 i;
+ 129   1        i = Hour/10;
+ 130   1        switch(i)
+ 131   1        {
+ 132   2          case(0):
+ 133   2            P3_0 = 1; P3_1 = 0; P3_2 = 0; P3_3 = 0; P3_4 = 0; P3_5 = 0; P3_6 = 1; P3_7 = 0; break;
+ 134   2          case(1):
+ 135   2            P3_0 = 1; P3_1 = 0; P3_2 = 0; P3_3 = 1; P3_4 = 1; P3_5 = 1; P3_6 = 1; P3_7 = 1; break;
+ 136   2          case(2):
+ 137   2            P3_0 = 1; P3_1 = 0; P3_2 = 1; P3_3 = 0; P3_4 = 0; P3_5 = 1; P3_6 = 0; P3_7 = 0; break;
+ 138   2          default:
+ 139   2            break;
+ 140   2        }
+ 141   1      }
+ 142          
+ 143          void main()
+ 144          {
+ 145   1        unsigned char i = 0;
+ 146   1      
+ 147   1        Uart_Init();
+ 148   1      
+ 149   1        while(1)
+ 150   1        {
+ 151   2          if(Flag_GPS_OK == 1 && RX_Buffer[4] == 'G' && RX_Buffer[6] == ',' && RX_Buffer[13] == '.')      //È·¶¨ÊÇ·ñÊ
+             -Õµ½"GPGGA"ÕâÒ»Ö¡Êý¾Ý
+ 152   2          {
+ 153   3            for( i = 0; i < 68 ; i++)
+ 154   3            {
+ 155   4              Display_GPGGA_Buffer[i] = RX_Buffer[i]; 
+ 156   4            }
+ 157   3            Hour = (Display_GPGGA_Buffer[7]-0x30)*10+(Display_GPGGA_Buffer[8]-0x30)+8;      //UTCÊ±¼ä×ª»»µ½±±¾©Ê±¼ä   U
+             -TC+8
+ 158   3                                                      //0x30ÎªASCII×ª»»ÎªÊý×Ö
+ 159   3            if( Hour >= 24)       //Òç³ö
+ 160   3            {
+ 161   4              Hour %= 24;       //»ñÈ¡µ±Ç°Hour
+ 162   4            }
+ 163   3      
+ 164   3            Min_High = Display_GPGGA_Buffer[9]-0x30;
+ 165   3            Min_Low = Display_GPGGA_Buffer[10]-0x30;
+ 166   3        
+ 167   3            Sec_High = Display_GPGGA_Buffer[11];
+ 168   3            Sec_Low = Display_GPGGA_Buffer[12];
+ 169   3      
+ 170   3            Flag_Calc_GPGGA_OK = 1;
+ 171   3          }
+ 172   2          
+ 173   2            Flag_Calc_GPGGA_OK = 0;
+ 174   2            display0();
+ 175   2            display1();
+ 176   2            display2();
+ 177   2            display3();
+C51 COMPILER V9.57.0.0   MAIN                                                              02/05/2020 16:22:54 PAGE 4   
+
+ 178   2        }
+ 179   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    625    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     68    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
